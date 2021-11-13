@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ConsoleApp1
 {
 
-    class Worker : IC
+    class Worker
     {
         public string Firstname { get; set; }
         public string Surname { get; set; }
@@ -14,7 +15,7 @@ namespace ConsoleApp1
         public int Number
         {
             get { return number; }
-            set 
+            set
             {
                 number = value > 0 ? value : 0;
             }
@@ -49,7 +50,7 @@ namespace ConsoleApp1
         }
     }
 
-    class Company
+    class Company : IEnumerable
     {
         List<Worker> workers = new List<Worker>()
         {
@@ -95,7 +96,10 @@ namespace ConsoleApp1
                 }
             }
         }
-
+        public IEnumerator GetEnumerator()
+        {
+            return workers.GetEnumerator();
+        }
         public void AddWorker()
         {
             string[] worker = new string[7];
@@ -133,7 +137,7 @@ namespace ConsoleApp1
             int number = int.Parse(Console.ReadLine());
             foreach (var worker in workers)
             {
-                if(worker.Number == number)
+                if (worker.Number == number)
                 {
                     workers.Remove(worker);
                     return;
@@ -160,13 +164,54 @@ namespace ConsoleApp1
             workerWanted[2] = Console.ReadLine();
             foreach (var worker in workers)
             {
-                if(worker.Firstname == workerWanted[0] && worker.Surname == workerWanted[1] && worker.Lastname == workerWanted[2])
+                if (worker.Firstname == workerWanted[0] && worker.Surname == workerWanted[1] && worker.Lastname == workerWanted[2])
                 {
                     Console.WriteLine(worker);
                     return;
                 }
             }
             Console.WriteLine("No worker found! Check full name!");
+        }
+
+        public void FindWorkersByDepartment()
+        {
+            Console.Write("Enter department's name: ");
+            string department = Console.ReadLine();
+            foreach (var worker in workers)
+            {
+                if (worker.Department == department)
+                {
+                    Console.WriteLine(worker);
+                }
+            }
+        }
+        public void ChangeDepartmentForWorker()
+        {
+            Console.Write("Enter number: ");
+            int number = int.Parse(Console.ReadLine());
+            if (FindNumber(number))
+            {
+                Console.Write("Enter new department's name:");
+                string department = Console.ReadLine();
+                foreach (var depart in departments)
+                {
+                    if (depart == department)
+                    {
+                        for (int i = 0; i < workers.Count; i++)
+                        {
+                            if (workers[i].Number == number)
+                            {
+                                workers[i].Department = depart;
+                                return;
+                            }
+                        }
+                    }  
+                }
+                Console.WriteLine("No department found! Check name!");
+                return;
+            }
+            Console.WriteLine("No worker found! Check number!");
+
         }
     }
     class DepatmentsComparer : IComparer<Worker>
@@ -183,7 +228,7 @@ namespace ConsoleApp1
             return x.Position.CompareTo(y.Position);
         }
     }
-    
+
 
     class ConnectDatabase
     {
