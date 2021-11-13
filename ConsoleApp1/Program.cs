@@ -103,12 +103,13 @@ namespace ConsoleApp1
         public void ClearAndFillWorkers()
         {
             workers.Clear();
-            Console.Write("enter the number of workers: ");
+            Console.Write("Enter the count of workers: ");
             int count = int.Parse(Console.ReadLine());
             for (int i = 0; i < count; i++)
             {
                 AddWorker();
             }
+            FindAllDepartment();
         }
         public void AddWorker()
         {
@@ -221,7 +222,33 @@ namespace ConsoleApp1
                 return;
             }
             Console.WriteLine("No worker found! Check number!");
+        }
 
+        public void CountWorkersAndSumSalariesByDepartment()
+        {
+            List<int> counts = new List<int>();
+            List<int> sumSalaries = new List<int>();
+            int count = 0;
+            int sum = 0;
+            foreach (var depart in departments)
+            {
+                foreach (var worker in workers)
+                {
+                    if(depart == worker.Department)
+                    {
+                        count++;
+                        sum += worker.Salary;
+                    }
+                }
+                counts.Add(count);
+                sumSalaries.Add(sum);
+                for (int i = 0; i < departments.Count; i++)
+                {
+                    Console.WriteLine($"{departments[i]} department" +
+                        $"\nCount of workers: {counts[i]}" +
+                        $"\nSum salaries: {sumSalaries[i]}\n");
+                }
+            }
         }
     }
     class DepatmentsComparer : IComparer<Worker>
@@ -239,11 +266,11 @@ namespace ConsoleApp1
         }
     }
 
-
-    class ConnectDatabase
+    class Database
     {
 
     }
+
     class Program
     {
         static void Main(string[] args)
