@@ -126,6 +126,20 @@ namespace ConsoleApp1
             worker[6] = Console.ReadLine();
             workers.Add(new Worker(worker[0], worker[1], worker[2], int.Parse(worker[3]), worker[4], worker[5], int.Parse(worker[6])));
         }
+        public void RemoveWorker()
+        {
+            Console.Write("Enter number: ");
+            int number = int.Parse(Console.ReadLine());
+            foreach (var worker in workers)
+            {
+                if(worker.Number == number)
+                {
+                    workers.Remove(worker);
+                    return;
+                }
+            }
+            Console.WriteLine("No worker found! Check number!");
+        }
     }
 
     class ConnectDatabase
