@@ -246,9 +246,20 @@ namespace ConsoleApp1
                 {
                     Console.WriteLine($"{departments[i]} department" +
                         $"\nCount of workers: {counts[i]}" +
-                        $"\nSum salaries: {sumSalaries[i]}\n");
+                        $"\nFund salaries: {sumSalaries[i]}\n");
                 }
+                count = 0;
+                sum = 0;
             }
+            foreach (var worker in workers)
+            {
+                sum += worker.Salary;
+            }
+            Console.WriteLine($"The general fund of the company: {sum}");
+        }
+        public void CompanyReport()
+        {
+            CountWorkersAndSumSalariesByDepartment();
         }
     }
     class DepatmentsComparer : IComparer<Worker>
