@@ -6,16 +6,31 @@ namespace ConsoleApp1
 
     class Worker
     {
-        public string Firstname{ get; set; }
+        public string Firstname { get; set; }
         public string Surname { get; set; }
         public string Lastname { get; set; }
-        public int Number { get; set; }
+        private int number;
+        public int Number
+        {
+            get { return number; }
+            set 
+            {
+                number = value > 0 ? value : 0;
+            }
+        }
         public string Department { get; set; }
         public string Position { get; set; }
-        public int Salary { get; set; }
-
+        private int salary;
+        public int Salary
+        {
+            get { return salary; }
+            set
+            {
+                salary = value > 0 ? value : 0;
+            }
+        }
         public Worker() : this("Empty", "Empty", "Empty", 0, "Empty", "Empty", 0)
-        {}
+        { }
         public Worker(string firstname, string surname, string lastname, int number, string department, string position, int salary)
         {
             Firstname = firstname;
@@ -54,12 +69,12 @@ namespace ConsoleApp1
         {
             foreach (Worker worker in workers)
             {
-                if(num == worker.Number)
+                if (num == worker.Number)
                 {
                     return true;
                 }
             }
-            return false; 
+            return false;
         }
 
         void FindAllDepartment()
@@ -68,7 +83,7 @@ namespace ConsoleApp1
             {
                 foreach (var item in departments)
                 {
-                    if(worker.Department == item)
+                    if (worker.Department == item)
                     {
                         break;
                     }
@@ -79,7 +94,7 @@ namespace ConsoleApp1
                 }
             }
         }
-        
+
         public void AddWorker()
         {
             string[] worker = new string[7];
@@ -90,10 +105,10 @@ namespace ConsoleApp1
             Console.Write("Enter lastname: ");
             worker[2] = Console.ReadLine();
             Console.Write("Enter number: ");
-            while(true)
+            while (true)
             {
                 string number = Console.ReadLine();
-                if(!FindNumber(int.Parse(number)))
+                if (!FindNumber(int.Parse(number)))
                 {
                     worker[3] = number.ToString();
                     break;
@@ -111,12 +126,11 @@ namespace ConsoleApp1
             worker[6] = Console.ReadLine();
             workers.Add(new Worker(worker[0], worker[1], worker[2], int.Parse(worker[3]), worker[4], worker[5], int.Parse(worker[6])));
         }
-
     }
 
     class ConnectDatabase
     {
-        
+
     }
     class Program
     {
