@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ConsoleApp1
 {
 
-    class Worker
+    class Worker : IC
     {
         public string Firstname { get; set; }
         public string Surname { get; set; }
@@ -140,7 +141,31 @@ namespace ConsoleApp1
             }
             Console.WriteLine("No worker found! Check number!");
         }
+        public void SortWorkerByDepartment()
+        {
+            workers.Sort(new DepatmentsComparer());
+        }
+        public void SortWorkerByPosition()
+        {
+            workers.Sort(new PositionComparer());
+        }
     }
+
+    class DepatmentsComparer : IComparer<Worker>
+    {
+        public int Compare(Worker x, Worker y)
+        {
+            return x.Department.CompareTo(y.Department);
+        }
+    }
+    class PositionComparer : IComparer<Worker>
+    {
+        public int Compare(Worker x, Worker y)
+        {
+            return x.Position.CompareTo(y.Position);
+        }
+    }
+    
 
     class ConnectDatabase
     {
