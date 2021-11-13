@@ -57,10 +57,11 @@ namespace ConsoleApp1
     {
         List<Worker> workers = new List<Worker>()
         {
-            new Worker("Sam", "Piter", "Jonsons", 1560, "Back-End", ".NET Developer", 2500),
-            new Worker("Sam", "Piter", "Jonsons", 1660, "Test", ".NET Developer", 2500),
-            new Worker("Sam", "Piter", "Jonsons", 1760, "Sell", ".NET Developer", 2500),
-            new Worker("Sam", "Piter", "Jonsons", 1860, "Design", ".NET Developer", 2500),
+            new Worker("Artem", "Tomechek", "Mykolaiovych", 1560, "Back-End", ".NET Developer", 2500),
+            new Worker("Bogdan", "Dargalchuk", "Edurdovych", 1660, "Front-End", "React.JS Developer", 2000),
+            new Worker("Maks", "Ovodiuk", "Mykolaiovyck", 1760, "Front-End", "React.JS Developer", 2000),
+            new Worker("Andrew", "Iurchuk", "Mykolaiovyck", 1860, "Test", "QA engineer", 1500),
+            new Worker("Sam", "Piterson", "Jonsons", 1960, "Design", "UI/UX Designer", 1800),
         };
         List<string> departments = new List<string>();
         public int CountWorkers { get; set; }
@@ -83,14 +84,27 @@ namespace ConsoleApp1
             }
             return false;
         }
-
+        bool FindDepart(string depart)
+        {
+            foreach (var d in departments)
+            {
+                if(d == depart)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         void FindAllDepartment()
         {
+            departments.Clear();
+            departments.Add(workers[0].Department);
             foreach (var worker in workers)
             {
-                foreach (var item in departments)
+                for (int i = 0; i < departments.Count; i++)
                 {
-                    if (worker.Department == item)
+                    
+                    if (FindDepart(worker.Department))
                     {
                         break;
                     }
@@ -114,12 +128,7 @@ namespace ConsoleApp1
             {
                 AddWorker();
             }
-            FindAllDepartment();
             CountWorkers = workers.Count;
-        }
-        public void AddWorker(Worker worker)
-        {
-            workers.Add(worker);
         }
         public void AddWorker()
         {
@@ -152,6 +161,7 @@ namespace ConsoleApp1
             worker[6] = Console.ReadLine();
             workers.Add(new Worker(worker[0], worker[1], worker[2], int.Parse(worker[3]), worker[4], worker[5], int.Parse(worker[6])));
             CountWorkers = workers.Count;
+            Console.WriteLine("Worker added!");
         }
         public void RemoveWorker()
         {
@@ -163,6 +173,7 @@ namespace ConsoleApp1
                 {
                     workers.Remove(worker);
                     CountWorkers = workers.Count;
+                    Console.WriteLine("Worker removed!");
                     return;
                 }
             }
@@ -198,6 +209,7 @@ namespace ConsoleApp1
 
         public void FindWorkersByDepartment()
         {
+            FindAllDepartment();
             Console.Write("Enter department's name: ");
             string department = Console.ReadLine();
             foreach (var worker in workers)
@@ -210,11 +222,12 @@ namespace ConsoleApp1
         }
         public void ChangeDepartmentForWorker()
         {
+            FindAllDepartment();
             Console.Write("Enter number: ");
             int number = int.Parse(Console.ReadLine());
             if (FindNumber(number))
             {
-                Console.Write("Enter new department's name:");
+                Console.Write("Enter new department's name: ");
                 string department = Console.ReadLine();
                 foreach (var depart in departments)
                 {
@@ -228,7 +241,7 @@ namespace ConsoleApp1
                                 return;
                             }
                         }
-                    }  
+                    }
                 }
                 Console.WriteLine("No department found! Check name!");
                 return;
@@ -238,6 +251,7 @@ namespace ConsoleApp1
 
         public void CountWorkersAndSumSalariesByDepartment()
         {
+            FindAllDepartment();
             List<int> counts = new List<int>();
             List<int> sumSalaries = new List<int>();
             int count = 0;
@@ -246,7 +260,7 @@ namespace ConsoleApp1
             {
                 foreach (var worker in workers)
                 {
-                    if(depart == worker.Department)
+                    if (depart == worker.Department)
                     {
                         count++;
                         sum += worker.Salary;
@@ -254,14 +268,14 @@ namespace ConsoleApp1
                 }
                 counts.Add(count);
                 sumSalaries.Add(sum);
-                for (int i = 0; i < departments.Count; i++)
-                {
-                    Console.WriteLine($"{departments[i]} department" +
-                        $"\nCount of workers: {counts[i]}" +
-                        $"\nFund salaries: {sumSalaries[i]}\n");
-                }
                 count = 0;
                 sum = 0;
+            }
+            for (int i = 0; i < departments.Count; i++)
+            {
+                Console.WriteLine($"{departments[i]} department" +
+                    $"\nCount of workers: {counts[i]}" +
+                    $"\nFund salaries: {sumSalaries[i]}\n");
             }
             foreach (var worker in workers)
             {
@@ -288,21 +302,21 @@ namespace ConsoleApp1
             return x.Position.CompareTo(y.Position);
         }
     }
-    
+
     class Database
     {
-        public void Save(Company company, string source)
+        public void Save(Company company)
         {
             BinaryFormatter binFormat = new BinaryFormatter();
-            using (Stream fStream = File.Create(source))
+            using (Stream fStream = File.Create("database.bin"))
             {
                 binFormat.Serialize(fStream, company);
             }
         }
-        public void Load(ref Company company, string source)
+        public void Load(ref Company company)
         {
             BinaryFormatter binFormat = new BinaryFormatter();
-            using (Stream fStream = File.OpenRead(source))
+            using (Stream fStream = File.OpenRead("database.bin"))
             {
                 company = (Company)binFormat.Deserialize(fStream);
             }
@@ -311,7 +325,7 @@ namespace ConsoleApp1
 
     class Menu
     {
-        public void PrintMenu()
+        void PrintMenu()
         {
             Console.WriteLine("Human Resources Department");
             Console.WriteLine($"1 - Fill database");
@@ -321,14 +335,108 @@ namespace ConsoleApp1
             Console.WriteLine($"5 - Sort workers by department");
             Console.WriteLine($"6 - Sort workers by position");
             Console.WriteLine($"7 - Search for a worker by full name");
-            Console.WriteLine($"8 - Show  workers by department");
-            Console.WriteLine($"9 - Calculate the number of workers in the specified department");
-            Console.WriteLine($"10 - Calculate the salary fund by department");
-            Console.WriteLine($"11 - Delete reports on the dismissed employee");
-            Console.WriteLine($"12 - Transfer of an employee to another department");
-            Console.WriteLine($"13 - Company report");
-            Console.WriteLine($"14 - Save");
-            Console.WriteLine($"15 - Exit");
+            Console.WriteLine($"8 - Show workers by department");
+            Console.WriteLine($"9 - Calculate the number of workers in the specified department and calculate the salary fund by department");
+            Console.WriteLine($"10 - Delete reports on the dismissed employee");
+            Console.WriteLine($"11 - Transfer of a worker to another department");
+            Console.WriteLine($"12 - Company report");
+            Console.WriteLine($"13 - Save");
+            Console.WriteLine($"14 - Exit");
+        }
+        void ErrorMessage()
+        {
+            Console.Error.WriteLine("Undefined!");
+            Console.ReadLine();
+            Console.Clear();
+        }
+        public void CheckChosenMenu(Company company)
+        {
+            int num = 1;
+            int g = 0;
+            while (num != 14)
+            {
+                PrintMenu();
+                Console.Write("Enter your choose: ");
+                string choose = Console.ReadLine();
+                if (int.TryParse(choose, out num))
+                {
+                    if (num == ++g)
+                    {
+                        company.ClearAndFillWorkers();
+                    }
+                    else if (num == ++g)
+                    {
+                        company.PrintAll();
+                    }
+                    else if (num == ++g)
+                    {
+                        company.AddWorker();
+                    }
+                    else if (num == ++g)
+                    {
+                        company.RemoveWorker();
+                    }
+                    else if (num == ++g)
+                    {
+                        company.SortWorkerByDepartment();
+                    }
+                    else if (num == ++g)
+                    {
+                        company.SortWorkerByPosition();
+                    }
+                    else if (num == ++g)
+                    {
+                        company.FindWorkerByFullname();
+                    }
+                    else if (num == ++g)
+                    {
+                        company.FindWorkersByDepartment();
+                    }
+                    else if (num == ++g)
+                    {
+                        company.CountWorkersAndSumSalariesByDepartment();
+                    }
+                    else if (num == ++g)
+                    {
+                        company.RemoveWorker();
+                    }
+                    else if (num == ++g)
+                    {
+                        company.ChangeDepartmentForWorker();
+                    }
+                    else if (num == ++g)
+                    {
+                        company.CompanyReport();
+                    }
+                    else if (num == ++g)
+                    {
+                        new Database().Save(company);
+                    }
+                    else if (num == ++g)
+                    {
+                        Console.WriteLine("Exiting...");
+                        Console.Clear();
+                    }
+                }
+                else
+                {
+                    ErrorMessage();
+                }
+                Console.ReadLine();
+                Console.Clear();
+                g = 0;
+            }
+            Console.WriteLine("Save database?\n" +
+                "1 - Yes\n2 - No");
+            string str = Console.ReadLine();
+            if (int.TryParse(str, out num))
+            {
+                if (num == 1)
+                {
+                    new Database().Save(company);
+                }
+                Console.Clear();
+            }
         }
     }
 
@@ -339,7 +447,8 @@ namespace ConsoleApp1
             Company company = null;
             Database database = new Database();
             Menu menu = new Menu();
-            menu.PrintMenu();
+            database.Load(ref company);
+            menu.CheckChosenMenu(company);
         }
     }
 }
