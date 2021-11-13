@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ConsoleApp1
 {
-
+    [Serializable]
     class Worker
     {
         public string Firstname { get; set; }
@@ -50,6 +52,7 @@ namespace ConsoleApp1
         }
     }
 
+    [Serializable]
     class Company : IEnumerable
     {
         List<Worker> workers = new List<Worker>()
@@ -60,6 +63,8 @@ namespace ConsoleApp1
             new Worker("Sam", "Piter", "Jonsons", 1860, "Design", ".NET Developer", 2500),
         };
         List<string> departments = new List<string>();
+        public int CountWorkers { get; set; }
+
         public void PrintAll()
         {
             foreach (Worker worker in workers)
@@ -110,6 +115,11 @@ namespace ConsoleApp1
                 AddWorker();
             }
             FindAllDepartment();
+            CountWorkers = workers.Count;
+        }
+        public void AddWorker(Worker worker)
+        {
+            workers.Add(worker);
         }
         public void AddWorker()
         {
@@ -141,6 +151,7 @@ namespace ConsoleApp1
             Console.Write("Enter salary: ");
             worker[6] = Console.ReadLine();
             workers.Add(new Worker(worker[0], worker[1], worker[2], int.Parse(worker[3]), worker[4], worker[5], int.Parse(worker[6])));
+            CountWorkers = workers.Count;
         }
         public void RemoveWorker()
         {
@@ -151,6 +162,7 @@ namespace ConsoleApp1
                 if (worker.Number == number)
                 {
                     workers.Remove(worker);
+                    CountWorkers = workers.Count;
                     return;
                 }
             }
@@ -276,20 +288,58 @@ namespace ConsoleApp1
             return x.Position.CompareTo(y.Position);
         }
     }
-
+    
     class Database
     {
+        public void Save(Company company, string source)
+        {
+            BinaryFormatter binFormat = new BinaryFormatter();
+            using (Stream fStream = File.Create(source))
+            {
+                binFormat.Serialize(fStream, company);
+            }
+        }
+        public void Load(ref Company company, string source)
+        {
+            BinaryFormatter binFormat = new BinaryFormatter();
+            using (Stream fStream = File.OpenRead(source))
+            {
+                company = (Company)binFormat.Deserialize(fStream);
+            }
+        }
+    }
 
+    class Menu
+    {
+        public void PrintMenu()
+        {
+            Console.WriteLine("Human Resources Department");
+            Console.WriteLine($"1 - Fill database");
+            Console.WriteLine($"2 - Show all workers");
+            Console.WriteLine($"3 - Add new worker");
+            Console.WriteLine($"4 - Remove worker");
+            Console.WriteLine($"5 - Sort workers by department");
+            Console.WriteLine($"6 - Sort workers by position");
+            Console.WriteLine($"7 - Search for a worker by full name");
+            Console.WriteLine($"8 - Show  workers by department");
+            Console.WriteLine($"9 - Calculate the number of workers in the specified department");
+            Console.WriteLine($"10 - Calculate the salary fund by department");
+            Console.WriteLine($"11 - Delete reports on the dismissed employee");
+            Console.WriteLine($"12 - Transfer of an employee to another department");
+            Console.WriteLine($"13 - Company report");
+            Console.WriteLine($"14 - Save");
+            Console.WriteLine($"15 - Exit");
+        }
     }
 
     class Program
     {
         static void Main(string[] args)
         {
-            Company company = new Company();
-            company.PrintAll();
-            company.AddWorker();
-            company.PrintAll();
+            Company company = null;
+            Database database = new Database();
+            Menu menu = new Menu();
+            menu.PrintMenu();
         }
     }
 }
