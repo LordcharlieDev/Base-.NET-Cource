@@ -100,6 +100,16 @@ namespace ConsoleApp1
         {
             return workers.GetEnumerator();
         }
+        public void ClearAndFillWorkers()
+        {
+            workers.Clear();
+            Console.Write("enter the number of workers: ");
+            int count = int.Parse(Console.ReadLine());
+            for (int i = 0; i < count; i++)
+            {
+                AddWorker();
+            }
+        }
         public void AddWorker()
         {
             string[] worker = new string[7];
