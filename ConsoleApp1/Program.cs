@@ -149,8 +149,26 @@ namespace ConsoleApp1
         {
             workers.Sort(new PositionComparer());
         }
+        public void FindWorkerByFullname()
+        {
+            string[] workerWanted = new string[3];
+            Console.Write("Enter firstname: ");
+            workerWanted[0] = Console.ReadLine();
+            Console.Write("Enter surtname: ");
+            workerWanted[1] = Console.ReadLine();
+            Console.Write("Enter lastname: ");
+            workerWanted[2] = Console.ReadLine();
+            foreach (var worker in workers)
+            {
+                if(worker.Firstname == workerWanted[0] && worker.Surname == workerWanted[1] && worker.Lastname == workerWanted[2])
+                {
+                    Console.WriteLine(worker);
+                    return;
+                }
+            }
+            Console.WriteLine("No worker found! Check full name!");
+        }
     }
-
     class DepatmentsComparer : IComparer<Worker>
     {
         public int Compare(Worker x, Worker y)
