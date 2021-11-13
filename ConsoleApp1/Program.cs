@@ -61,6 +61,24 @@ namespace ConsoleApp1
             }
             return false; 
         }
+
+        void FindAllDepartment()
+        {
+            foreach (var worker in workers)
+            {
+                foreach (var item in departments)
+                {
+                    if(worker.Department == item)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        departments.Add(worker.Department);
+                    }
+                }
+            }
+        }
         
         public void AddWorker()
         {
