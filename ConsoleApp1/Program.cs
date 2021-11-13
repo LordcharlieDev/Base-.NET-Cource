@@ -37,12 +37,12 @@ namespace ConsoleApp1
     {
         List<Worker> workers = new List<Worker>()
         {
-            new Worker("Sam", "Piter", "Jonsons", 1560, "IT", ".NET Developer", 2500),
-            new Worker("Sam", "Piter", "Jonsons", 1660, "IT", ".NET Developer", 2500),
-            new Worker("Sam", "Piter", "Jonsons", 1760, "IT", ".NET Developer", 2500),
-            new Worker("Sam", "Piter", "Jonsons", 1860, "IT", ".NET Developer", 2500),
+            new Worker("Sam", "Piter", "Jonsons", 1560, "Back-End", ".NET Developer", 2500),
+            new Worker("Sam", "Piter", "Jonsons", 1660, "Test", ".NET Developer", 2500),
+            new Worker("Sam", "Piter", "Jonsons", 1760, "Sell", ".NET Developer", 2500),
+            new Worker("Sam", "Piter", "Jonsons", 1860, "Design", ".NET Developer", 2500),
         };
-
+        List<string> departments = new List<string>();
         public void PrintAll()
         {
             foreach (Worker worker in workers)
@@ -61,9 +61,37 @@ namespace ConsoleApp1
             }
             return false; 
         }
-        public AddWorker()
+        
+        public void AddWorker()
         {
-
+            string[] worker = new string[7];
+            Console.Write("Enter firstname: ");
+            worker[0] = Console.ReadLine();
+            Console.Write("Enter surtname: ");
+            worker[1] = Console.ReadLine();
+            Console.Write("Enter lastname: ");
+            worker[2] = Console.ReadLine();
+            Console.Write("Enter number: ");
+            while(true)
+            {
+                string number = Console.ReadLine();
+                if(!FindNumber(int.Parse(number)))
+                {
+                    worker[3] = number.ToString();
+                    break;
+                }
+                else
+                {
+                    Console.Write("Not unique! Enter again: ");
+                }
+            }
+            Console.Write("Enter department: ");
+            worker[4] = Console.ReadLine();
+            Console.Write("Enter position: ");
+            worker[5] = Console.ReadLine();
+            Console.Write("Enter salary: ");
+            worker[6] = Console.ReadLine();
+            workers.Add(new Worker(worker[0], worker[1], worker[2], int.Parse(worker[3]), worker[4], worker[5], int.Parse(worker[6])));
         }
 
     }
@@ -77,6 +105,8 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             Company company = new Company();
+            company.PrintAll();
+            company.AddWorker();
             company.PrintAll();
         }
     }
