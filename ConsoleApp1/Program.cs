@@ -243,7 +243,15 @@ namespace ConsoleApp1
                         }
                     }
                 }
-                Console.WriteLine("No department found! Check name!");
+                for (int i = 0; i < workers.Count; i++)
+                {
+                    if (workers[i].Number == number)
+                    {
+                        workers[i].Department = department;
+                        departments.Add(department);
+                        return;
+                    }
+                }
                 return;
             }
             Console.WriteLine("No worker found! Check number!");
@@ -337,7 +345,7 @@ namespace ConsoleApp1
             Console.WriteLine($"7 - Search for a worker by full name");
             Console.WriteLine($"8 - Show workers by department");
             Console.WriteLine($"9 - Calculate the number of workers in the specified department and calculate the salary fund by department");
-            Console.WriteLine($"10 - Delete reports on the dismissed employee");
+            Console.WriteLine($"10 - Delete reports on the dismissed worker");
             Console.WriteLine($"11 - Transfer of a worker to another department");
             Console.WriteLine($"12 - Company report");
             Console.WriteLine($"13 - Save");
